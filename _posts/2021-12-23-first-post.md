@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "初めてのポスト"
 date: 2021-12-23
 ---
