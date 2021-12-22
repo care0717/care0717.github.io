@@ -1,3 +1,7 @@
+---
+layout: default
+---
+
 # This is care0717's blog
 - [about](about)
 
