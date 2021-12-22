@@ -6,4 +6,4 @@ date: 2021-05-27
 
 # Fist post
 
-nuga
+ぼげ
