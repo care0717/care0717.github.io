@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "First post"
+title: "あああ"
 date: 2021-12-22
 ---
 
