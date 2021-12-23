@@ -14,5 +14,6 @@ title: "GitHub Pages + jekyllでブログ作り"
 - layout: postやpageを指定すると逆にレイアウトが崩れる
   - 何も指定しなくてよい
   - _layoutsを作成して指定してみた
+    - _layoutsは元のテーマからコピペしてくる
 - ビルド周りのログはgithub actionsに吐き出される
   - エラーログも含めて見れるのでもっと早く見ればよかった
