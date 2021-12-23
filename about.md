@@ -1,5 +1,4 @@
 ---
-layout: page
 title: "About"
 date: 2021-12-23
 ---

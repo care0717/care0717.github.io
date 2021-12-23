@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "GitHub Pages + jekyllでブログ作り"
 ---
 
