@@ -13,5 +13,6 @@ title: "GitHub Pages + jekyllでブログ作り"
   - メタデータで指定されたdateはファイル名よりも優先される
 - layout: postやpageを指定すると逆にレイアウトが崩れる
   - 何も指定しなくてよい
-  - _layoutsを指定してみた
-
+  - _layoutsを作成して指定してみた
+- ビルド周りのログはgithub actionsに吐き出される
+  - エラーログも含めて見れるのでもっと早く見ればよかった
