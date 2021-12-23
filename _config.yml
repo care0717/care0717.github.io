@@ -1,3 +1,4 @@
 title: care0717's blog
 lang: ja
+permalink: /:title
 theme: jekyll-theme-slate
