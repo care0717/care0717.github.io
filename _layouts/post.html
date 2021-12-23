@@ -4,9 +4,9 @@ layout: default
 
 <article>
   <div>
-    {{ content }}
+    Written on {{ page.date | date: "%B %e, %Y" }}
   </div>
   <div>
-    Written on {{ page.date | date: "%B %e, %Y" }}
+    {{ content }}
   </div>
 </article>
