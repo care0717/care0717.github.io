@@ -9,32 +9,31 @@
   {% unless post.next %}
     {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
     {% capture month %}{{ post.date | date: '%m' }}{% endcapture %}
-    <h2>{{ month }}/{{ year }}</h2>
-    <ul>
+    <h2 id="{{year}}{{nmonth}}">{{ month }}/{{ year }}</h2>
+    <ul class="posts">
       <li>
-        <span>{{ post.date | date_to_string }} &raquo;</span>
-        <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        <span class="post-date">{{ post.date | date_to_string }} &raquo;</span>
+        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
       </li>
+    </ul>
   {% else %}
     {% capture month %}{{ post.date | date: '%m' }}{% endcapture %}
     {% capture nmonth %}{{ post.next.date | date: '%m' }}{% endcapture %}
     {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
     {% if month != nmonth %}
-      </ul>
-      <h2>{{ month }}/{{ year }}</h2>
-      <ul>
+      <h2 id="{{year}}{{nmonth}}">{{ month }}/{{ year }}</h2>
+      <ul class="posts">
     {% else %}
       {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
       {% if year != nyear %}
-        </ul>
-        <h2>{{ month }}/{{ year }}</h2>
-        <ul>
+        <h2 id="{{year}}{{nmonth}}">{{ month }}/{{ year }}</h2>
+        <ul class="posts">
       {% endif %}
     {% endif %}
     <li>
-      <span>{{ post.date | date_to_string }} &raquo;</span>
-      <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      <span class="post-date">{{ post.date | date_to_string }} &raquo;</span>
+      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
     </li>
+  </ul>
   {% endunless %}
 {% endfor %}
-</ul>
