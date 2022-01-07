@@ -11,7 +11,7 @@
 <h3>{{ year }}/{{ month }}</h3>
 <ul>
 <li>
-<span>{{ post.date | date: "%m/%d/%Y" }} &raquo;</span>
+<span>{{ post.date | date: "%Y/%m/%d" }} &raquo;</span>
 <a href="{{ post.url }}">{{ post.title }}</a>
 </li>
 {% else %}
@@ -31,7 +31,7 @@
 {% endif %}
 {% endif %}
 <li>
-<span>{{ post.date | date: "%m/%d/%Y" }} &raquo;</span>
+<span>{{ post.date | date: "%Y/%m/%d" }} &raquo;</span>
 <a href="{{ post.url }}">{{ post.title }}</a>
 </li>
 {% endunless %}
