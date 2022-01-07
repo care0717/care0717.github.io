@@ -4,36 +4,30 @@
 - [about](about)
 
 ## Posts
-
 {% for post in site.posts %}
-  {% unless post.next %}
-    {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
-    {% capture month %}{{ post.date | date: '%m' }}{% endcapture %}
-    <h2 id="{{year}}{{nmonth}}">{{ month }}/{{ year }}</h2>
-    <ul class="posts">
-      <li>
-        <span class="post-date">{{ post.date | date_to_string }} &raquo;</span>
-        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-      </li>
-    </ul>
-  {% else %}
-    {% capture month %}{{ post.date | date: '%m' }}{% endcapture %}
-    {% capture nmonth %}{{ post.next.date | date: '%m' }}{% endcapture %}
-    {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
-    {% if month != nmonth %}
-      <h2 id="{{year}}{{nmonth}}">{{ month }}/{{ year }}</h2>
-      <ul class="posts">
-    {% else %}
-      {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
-      {% if year != nyear %}
-        <h2 id="{{year}}{{nmonth}}">{{ month }}/{{ year }}</h2>
-        <ul class="posts">
-      {% endif %}
-    {% endif %}
-    <li>
-      <span class="post-date">{{ post.date | date_to_string }} &raquo;</span>
-      <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-    </li>
-  </ul>
-  {% endunless %}
+{% capture year_of_current_post %}
+{{ post.date | date: "%Y" }}
+{% endcapture %}
+
+{% capture year_of_previous_post %}
+{{ post.previous.date | date: "%Y" }}
+{% endcapture %}
+
+{% if forloop.first %}
+<h2>{{ year_of_current_post }}</h2>
+<ul>
+{% endif %}
+<li><a href="{{ post.url }}">{{ post.title }}</a></li>
+
+{% if forloop.last %}
+</ul>
+{% else %}
+{% if year_of_current_post != year_of_previous_post %}
+</ul>
+
+<h2>{{ year_of_previous_post }}</h2>
+<ul>
+{% endif %}
+{% endif %}
+        
 {% endfor %}
