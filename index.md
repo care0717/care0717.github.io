@@ -5,10 +5,36 @@
 
 ## Posts
 
-<ul>
-  {% for post in site.posts %}
+{% for post in site.posts %}
+  {% unless post.next %}
+    {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
+    {% capture month %}{{ post.date | date: '%m' }}{% endcapture %}
+    <h2>{{ month }}/{{ year }}</h2>
+    <ul>
+      <li>
+        <span>{{ post.date | date_to_string }} &raquo;</span>
+        <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+      </li>
+  {% else %}
+    {% capture month %}{{ post.date | date: '%m' }}{% endcapture %}
+    {% capture nmonth %}{{ post.next.date | date: '%m' }}{% endcapture %}
+    {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
+    {% if month != nmonth %}
+      </ul>
+      <h2>{{ month }}/{{ year }}</h2>
+      <ul>
+    {% else %}
+      {% capture nyear %}{{ post.next.date | date: '%Y' }}{% endcapture %}
+      {% if year != nyear %}
+        </ul>
+        <h2>{{ month }}/{{ year }}</h2>
+        <ul>
+      {% endif %}
+    {% endif %}
     <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
+      <span>{{ post.date | date_to_string }} &raquo;</span>
+      <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
     </li>
-  {% endfor %}
+  {% endunless %}
+{% endfor %}
 </ul>
