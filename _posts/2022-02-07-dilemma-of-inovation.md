@@ -14,7 +14,7 @@ title: "イノベーションのジレンマを読んだ"
 いわゆる[出落ち本](https://yurugengo.mtakagishi.com/words/%E5%87%BA%E8%90%BD%E3%81%A1%E6%9C%AC.html)な気がする。上の主張が最初にあった後、説を補強するための歴史的な事実がつらなっている。  
 出てくる破壊的技術が大体、小さくて安くて機能的には少ない単純なもので面白い。
 なんとなく破壊的技術だと思ったもの
-- Google Workspac
+- Google Workspace
 - Go言語
 - freee
 
