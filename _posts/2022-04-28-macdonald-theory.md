@@ -7,7 +7,7 @@ title: "マクドナルド理論について"
 個人的にマクドナルド理論が好きなので雑多に書く
 
 ## マクドナルド理論とは
-https://jonbell.medium.com/mcdonalds-theory-9216e1c9da7d
+[McDonald’s Theory](https://jonbell.medium.com/mcdonalds-theory-9216e1c9da7d)
 > I use a trick with co-workers when we’re trying to decide where to eat for lunch and no one has any ideas. I recommend McDonald’s.
 > An interesting thing happens. Everyone unanimously agrees that we can’t possibly go to McDonald’s, and better lunch suggestions emerge. Magic!
 
@@ -33,6 +33,7 @@ https://jonbell.medium.com/mcdonalds-theory-9216e1c9da7d
 - 出すにしても50点ぐらいのものを出す
   - 0点からスタートするとどうやっても100点にはいかないと思っている
     - マクドナルドからスタートして高級寿司屋に行くことはないはず
+      - あんまり的を射てない気がするけど雰囲気で伝わってほしい
   - [各タスク・成果物を「20点版」と「100点版」で分ける（改善余地あり）](https://yuzutas0.hatenablog.com/entry/2021/03/27/170000#%E5%90%84%E3%82%BF%E3%82%B9%E3%82%AF%E6%88%90%E6%9E%9C%E7%89%A9%E3%82%9220%E7%82%B9%E7%89%88%E3%81%A8100%E7%82%B9%E7%89%88%E3%81%A7%E5%88%86%E3%81%91%E3%82%8B%E6%94%B9%E5%96%84%E4%BD%99%E5%9C%B0%E3%81%82%E3%82%8A)
     - このイメージだがやはり初期の点数で収まろうとするインセンティブがあるので、最初からある程度高くだしている
   - 0->60にするのと60->100にするのには同じくらい時間がかかるとかなんとか(要出展)
