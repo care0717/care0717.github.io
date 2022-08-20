@@ -108,7 +108,7 @@ _checkや_errorといった予約語をworkflow定義に用いることで、[�
 他にも[if operator](https://docs.digdag.io/operators/if.html)を用いることでも条件分岐でき、[Javascriptを使って簡単な式を条件に書く](https://docs.digdag.io/workflow_definition.html#calculating-variables)ことができる。
 
 ### ログ保持
-[サーバーを起動するときにオプションを設定する](https://docs.digdag.io/command_reference.html#server)ことで、ログをローカルやS3やGCSに保存できる。
+[サーバーを起動するときにconfigを書く](https://docs.digdag.io/command_reference.html#server)ことで、ログをローカルやS3やGCSに保存できる。
 
 ### 稼働情報保持
 WebUIから1つ1つのsessionがどれくらい時間がかかったかはわかるが、実行時間の変化や正常終了の数といった統計情報は見ることができない。[メトリクスを取得する](https://docs.digdag.io/metrics.html)ことはできるので、そこから自前で加工すればある程度は統計情報を得ることができる。
