@@ -5,7 +5,7 @@ title: "Digdagの機能紹介"
 
 # {{ page.title }}
 ワークフローエンジンの機能は色々あるので網羅的にまとめたいと常々思っていた。Digdag vs Airflowなどの比較記事はあるが機能ベースで紹介されることは少ないというのがモチベーション。
-[実践的データ基盤への処方箋](https://gihyo.jp/book/2021/978-4-297-12445-8)を読んだところ非常に良い表があったのでそれをベースに書いていく。
+そんな中で[実践的データ基盤への処方箋](https://gihyo.jp/book/2021/978-4-297-12445-8)を読んだところ非常に良い表があったのでそれをベースに書いていく。
 
 > ![ワークフローエンジンが一般的に用意している機能一覧](/assets/data-syohousen-workflow.jpg)  
 > 実践的データ基盤への処方箋 第2章 16節より
@@ -75,7 +75,7 @@ taskの起動順序はworkflowで書いた通りに上から実行される。
 再実行は[コマンド](http://docs.digdag.io/command_reference.html#retry)とWebUIからできる。スキップは[コマンド](http://docs.digdag.io/command_reference.html#reschedule)からのみ。
 
 ### アラート
-[異常終了をキャッチしてなにかしたり](http://docs.digdag.io/workflow_definition.html#sending-error-notification)、[長時間が発生したらなにかしたり](http://docs.digdag.io/scheduling_workflow.html#setting-an-alert-if-a-workflow-doesn-t-finish-within-expected-time)できる。[メールを飛ばす](http://docs.digdag.io/operators/mail.html)機能自体は標準であるが、その他チャットツールなどに飛ばしたい場合はプラグインを探したり自作する。
+[異常終了をキャッチしてなにかしたり](http://docs.digdag.io/workflow_definition.html#sending-error-notification)、[長時間が発生したらなにかしたり](http://docs.digdag.io/scheduling_workflow.html#setting-an-alert-if-a-workflow-doesn-t-finish-within-expected-time)できる。[メールを飛ばす](http://docs.digdag.io/operators/mail.html)機能はあるが、その他チャットツールなどに飛ばしたい場合はプラグインを探したり自作する。
 
 ### 状態管理
 sessionのステータスに関してこちらから見えるのは実行中、正常終了、異常終了、キャンセルぐらい。個々のtaskは[様々な状態](https://github.com/treasure-data/digdag/blob/453a36a1937848d1856fafce5766893abd5ddb45/digdag-core/src/main/java/io/digdag/core/session/TaskStateCode.java#L10-L19)をとる
