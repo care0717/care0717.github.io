@@ -214,6 +214,26 @@ export default function App(){
   const[phi,setPhi]=useState(Math.PI/5.5);
   const[copied,setCopied]=useState(false);
 
+  // Load puzzle from URL query parameter on mount
+  useEffect(()=>{
+    const params=new URLSearchParams(window.location.search);
+    const id=params.get("id");
+    if(id){
+      const result=decodePuzzle(id);
+      if(result){
+        setPuzzle(result);
+        setPuzzleId(id);
+        setShowAnswer(false);
+        setError(null);
+        setTheta(Math.PI/4);
+        setPhi(Math.PI/5.5);
+        const keys=new Set(id.split("-")[0].split(""));
+        setSelected(keys);
+        setIdInput(id);
+      }
+    }
+  },[]);
+
   const togglePiece=(key)=>{setSelected(prev=>{const n=new Set(prev);n.has(key)?n.delete(key):n.add(key);return n});setPuzzle(null);setShowAnswer(false);setError(null);setPuzzleId("")};
 
   const generate=useCallback(()=>{
@@ -236,10 +256,19 @@ export default function App(){
     }else{setError("無効なIDです。正しいIDを入力してください。")}
   },[idInput]);
 
-  const copyId=useCallback(()=>{
+  const copyUrl=useCallback(()=>{
     if(!puzzleId)return;
-    navigator.clipboard.writeText(puzzleId).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),1500)}).catch(()=>{});
+    const url=`${window.location.origin}${window.location.pathname}?id=${puzzleId}`;
+    navigator.clipboard.writeText(url).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),1500)}).catch(()=>{});
   },[puzzleId]);
+
+  const shareToX=useCallback(()=>{
+    if(!puzzleId)return;
+    const url=`${window.location.origin}${window.location.pathname}?id=${puzzleId}`;
+    const text=`Cube Puzzleに挑戦！ 使用ブロック: ${[...selected].join(", ")}`;
+    const twitterUrl=`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl,"_blank");
+  },[puzzleId,selected]);
 
   const handleDrag=useCallback((dx,dy)=>{setTheta(p=>p-dx*0.008);setPhi(p=>Math.max(0.05,Math.min(Math.PI/2-0.05,p+dy*0.008)))},[]);
 
@@ -287,8 +316,8 @@ export default function App(){
             <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16,width:"100%"}}>
               <span style={{fontSize:12,color:"#64748b",whiteSpace:"nowrap"}}>ID:</span>
               <code style={{flex:1,fontSize:14,color:"#e2e8f0",background:"rgba(255,255,255,0.06)",padding:"6px 10px",borderRadius:6,fontFamily:"monospace",overflow:"hidden",textOverflow:"ellipsis"}}>{puzzleId}</code>
-              <button onClick={copyId} style={{padding:"6px 12px",borderRadius:6,border:"1px solid rgba(255,255,255,0.1)",background:copied?"rgba(34,197,94,0.15)":"rgba(255,255,255,0.04)",color:copied?"#4ade80":"#94a3b8",fontSize:12,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap",transition:"all 0.2s"}}>
-                {copied?"✓ コピー済":"📋 コピー"}
+              <button onClick={copyUrl} style={{padding:"6px 12px",borderRadius:6,border:"1px solid rgba(255,255,255,0.1)",background:copied?"rgba(34,197,94,0.15)":"rgba(255,255,255,0.04)",color:copied?"#4ade80":"#94a3b8",fontSize:12,fontWeight:600,cursor:"pointer",whiteSpace:"nowrap",transition:"all 0.2s"}}>
+                {copied?"✓ コピー済":"URLコピー"}
               </button>
             </div>
           )}
@@ -307,7 +336,9 @@ export default function App(){
             <button onClick={()=>{setTheta(Math.PI/4);setPhi(Math.PI/5.5)}} style={{padding:"10px 16px",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"#94a3b8",fontSize:13,fontWeight:600,cursor:"pointer"}}>
               ↩ 視点リセット
             </button>
-
+            <button onClick={shareToX} style={{padding:"10px 24px",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(59,130,246,0.15)",color:"#60a5fa",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+              𝕏 ポスト
+            </button>
           </div>
         </div>
       )}
