@@ -13,7 +13,7 @@ export interface PostMeta {
  */
 export async function getAllPosts(): Promise<PostMeta[]> {
   // Viteのglob importで全てのMarkdownファイルを取得
-  const modules = import.meta.glob<{ default: string }>('/src/posts/*.md', {
+  const modules = import.meta.glob<string>('/src/posts/*.md', {
     query: '?raw',
     import: 'default',
   });
