@@ -1,12 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
 const PIECE_DEFS = {
-  A: { name:"A", cubes:[[0,0,0],[1,0,0],[1,1,0],[0,0,1]], color:"#3B82F6", light:"#93C5FD", dark:"#1E40AF", count:4 },
+  A: { name:"A", cubes:[[0,0,0],[1,0,0],[1,1,0],[2,1,0]], color:"#DB2777", light:"#F9A8D4", dark:"#9D174D", count:4 },
   B: { name:"B", cubes:[[0,0,0],[1,0,0],[0,1,0],[0,0,1]], color:"#F97316", light:"#FDBA74", dark:"#C2410C", count:4 },
-  C: { name:"C", cubes:[[0,0,0],[0,1,0],[1,0,0],[1,0,1]], color:"#8B5CF6", light:"#C4B5FD", dark:"#5B21B6", count:4 },
-  D: { name:"D", cubes:[[0,0,0],[1,0,0],[1,1,0],[2,1,0]], color:"#DB2777", light:"#F9A8D4", dark:"#9D174D", count:4 },
-  E: { name:"E", cubes:[[0,0,0],[1,0,0],[2,0,0],[1,1,0]], color:"#EF4444", light:"#FCA5A5", dark:"#991B1B", count:4 },
-  F: { name:"F", cubes:[[0,0,0],[1,0,0],[2,0,0],[2,1,0]], color:"#22C55E", light:"#86EFAC", dark:"#15803D", count:4 },
+  C: { name:"C", cubes:[[0,0,0],[1,0,0],[2,0,0],[1,1,0]], color:"#EF4444", light:"#FCA5A5", dark:"#991B1B", count:4 },
+  D: { name:"D", cubes:[[0,0,0],[0,1,0],[1,0,0],[1,0,1]], color:"#8B5CF6", light:"#C4B5FD", dark:"#5B21B6", count:4 },
+  E: { name:"E", cubes:[[0,0,0],[1,0,0],[2,0,0],[2,1,0]], color:"#22C55E", light:"#86EFAC", dark:"#15803D", count:4 },
+  F: { name:"F", cubes:[[0,0,0],[1,0,0],[1,1,0],[0,0,1]], color:"#3B82F6", light:"#93C5FD", dark:"#1E40AF", count:4 },
   G: { name:"G", cubes:[[0,0,0],[1,0,0],[0,1,0]], color:"#EAB308", light:"#FDE047", dark:"#A16207", count:3 },
 };
 
@@ -183,7 +183,7 @@ function IsometricView({cubes,width=380,height=340,showAnswer,pieces,theta,phi,o
 
 function PiecePreview({pieceKey,size=56}){
   const def=PIECE_DEFS[pieceKey],cubes=def.cubes;
-  const cam=makeCamera(Math.PI/4,Math.PI/5.5);const S=10;
+  const cam=makeCamera(Math.PI/5,Math.PI/4);const S=10;
   const cubeSet=new Set(cubes.map(c=>c.join(",")));
   const cx2=cubes.reduce((s,c)=>s+c[0]+0.5,0)/cubes.length;
   const cy2=cubes.reduce((s,c)=>s+c[1]+0.5,0)/cubes.length;
@@ -210,8 +210,8 @@ export default function App(){
   const[error,setError]=useState(null);
   const[puzzleId,setPuzzleId]=useState("");
   const[idInput,setIdInput]=useState("");
-  const[theta,setTheta]=useState(Math.PI/4);
-  const[phi,setPhi]=useState(Math.PI/5.5);
+  const[theta,setTheta]=useState(Math.PI/5);
+  const[phi,setPhi]=useState(Math.PI/4);
   const[copied,setCopied]=useState(false);
 
   // Load puzzle from URL query parameter on mount
@@ -225,8 +225,8 @@ export default function App(){
         setPuzzleId(id);
         setShowAnswer(false);
         setError(null);
-        setTheta(Math.PI/4);
-        setPhi(Math.PI/5.5);
+        setTheta(Math.PI/5);
+        setPhi(Math.PI/4);
         const keys=new Set(id.split("-")[0].split(""));
         setSelected(keys);
         setIdInput(id);
@@ -238,7 +238,7 @@ export default function App(){
 
   const generate=useCallback(()=>{
     if(selected.size<2)return;setGenerating(true);setError(null);setShowAnswer(false);
-    setTheta(Math.PI/4);setPhi(Math.PI/5.5);
+    setTheta(Math.PI/5);setPhi(Math.PI/4);
     setTimeout(()=>{const r=generatePuzzle([...selected],400);
       if(r){setPuzzle(r);const id=encodePuzzle(r.pieces);setPuzzleId(id);console.log("Puzzle ID:",id)}
       else{setError("生成に失敗しました。もう一度お試しください。");setPuzzle(null);setPuzzleId("")}
@@ -250,7 +250,7 @@ export default function App(){
     const result=decodePuzzle(trimmed);
     if(result){
       setPuzzle(result);setPuzzleId(trimmed);setShowAnswer(false);setError(null);
-      setTheta(Math.PI/4);setPhi(Math.PI/5.5);
+      setTheta(Math.PI/5);setPhi(Math.PI/4);
       // Update selected pieces to match
       const keys=new Set(trimmed.split("-")[0].split(""));setSelected(keys);
     }else{setError("無効なIDです。正しいIDを入力してください。")}
@@ -333,7 +333,7 @@ export default function App(){
             <button onClick={()=>setShowAnswer(!showAnswer)} style={{padding:"10px 24px",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)",background:showAnswer?"rgba(139,92,246,0.15)":"rgba(255,255,255,0.04)",color:showAnswer?"#a78bfa":"#94a3b8",fontSize:13,fontWeight:600,cursor:"pointer"}}>
               {showAnswer?"🔒 答えを隠す":"👁 答えを見る"}
             </button>
-            <button onClick={()=>{setTheta(Math.PI/4);setPhi(Math.PI/5.5)}} style={{padding:"10px 16px",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"#94a3b8",fontSize:13,fontWeight:600,cursor:"pointer"}}>
+            <button onClick={()=>{setTheta(Math.PI/5);setPhi(Math.PI/4)}} style={{padding:"10px 16px",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"#94a3b8",fontSize:13,fontWeight:600,cursor:"pointer"}}>
               ↩ 視点リセット
             </button>
             <button onClick={shareToX} style={{padding:"10px 24px",borderRadius:8,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(59,130,246,0.15)",color:"#60a5fa",fontSize:13,fontWeight:600,cursor:"pointer"}}>
