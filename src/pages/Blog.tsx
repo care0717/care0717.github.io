@@ -1,6 +1,8 @@
 import { Link } from 'react-router';
 import { useState, useEffect } from 'react';
 import { getAllPosts, type PostMeta } from '../lib/posts';
+import { Layout } from '../components/Layout';
+import './Blog.css';
 
 export default function Blog() {
   const [posts, setPosts] = useState<PostMeta[]>([]);
@@ -13,7 +15,6 @@ export default function Blog() {
     });
   }, []);
 
-  // 年ごとにグループ化
   const postsByYear = posts.reduce((acc, post) => {
     const year = post.date.split('-')[0] || 'Unknown';
     if (!acc[year]) acc[year] = [];
@@ -22,31 +23,37 @@ export default function Blog() {
   }, {} as Record<string, PostMeta[]>);
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-      <h1>Blog</h1>
-      <Link to="/">← Home</Link>
+    <Layout>
+      <div className="blog">
+        <header className="page-header">
+          <h1>Blog</h1>
+          <p className="page-description">技術や読書の記録</p>
+        </header>
 
-      <section style={{ marginTop: '2rem' }}>
         {loading ? (
-          <p>読み込み中...</p>
+          <p className="loading">読み込み中...</p>
         ) : (
-          Object.entries(postsByYear)
-            .sort(([a], [b]) => b.localeCompare(a))
-            .map(([year, yearPosts]) => (
-              <div key={year}>
-                <h3>{year}</h3>
-                <ul>
-                  {yearPosts.map((post) => (
-                    <li key={post.slug}>
-                      <span>{post.date.slice(5)} » </span>
-                      <Link to={`/blog/${post.slug}`}>{post.title}</Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
+          <div className="years">
+            {Object.entries(postsByYear)
+              .sort(([a], [b]) => b.localeCompare(a))
+              .map(([year, yearPosts]) => (
+                <section key={year} className="year-section">
+                  <h2 className="year-title">{year}</h2>
+                  <div className="year-posts">
+                    {yearPosts.map((post) => (
+                      <article key={post.slug} className="blog-post-item">
+                        <time className="blog-post-date">{post.date.slice(5)}</time>
+                        <Link to={`/blog/${post.slug}`} className="blog-post-link">
+                          {post.title}
+                        </Link>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ))}
+          </div>
         )}
-      </section>
-    </div>
+      </div>
+    </Layout>
   );
 }

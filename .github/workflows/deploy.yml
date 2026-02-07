@@ -52,20 +52,29 @@ jobs:
       - name: Build main site
         run: pnpm build
 
-      # Sandbox (cube-puzzle-generator) のビルド
-      - name: Install dependencies (cube-puzzle-generator)
-        working-directory: ./sandbox/cube-puzzle-generator
-        run: pnpm install
-
-      - name: Build cube-puzzle-generator
-        working-directory: ./sandbox/cube-puzzle-generator
-        run: pnpm build
-
-      # ビルド結果を統合
-      - name: Copy sandbox to main dist
+      # Sandbox プロジェクトのビルド（全て）
+      - name: Build all sandbox projects
         run: |
           mkdir -p dist/sandbox
-          cp -r sandbox/cube-puzzle-generator/dist dist/sandbox/cube-puzzle-generator
+          for dir in sandbox/*/; do
+            if [ -f "${dir}package.json" ]; then
+              project_name=$(basename "$dir")
+              echo "Building sandbox project: $project_name"
+
+              cd "$dir"
+              pnpm install
+              pnpm build
+              cd ../..
+
+              # ビルド結果をコピー
+              if [ -d "${dir}dist" ]; then
+                cp -r "${dir}dist" "dist/sandbox/$project_name"
+                echo "Copied $project_name to dist/sandbox/$project_name"
+              else
+                echo "Warning: ${dir}dist not found, skipping copy"
+              fi
+            fi
+          done
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

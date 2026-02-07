@@ -1,11 +1,13 @@
 {
-  "name": "vite-project",
+  "name": "care0717.github.io",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run build:sandbox && tsc -b && vite build",
+    "build:sandbox": "cd sandbox/cube-puzzle-generator && pnpm install && pnpm build && mkdir -p ../../public/sandbox && cp -r dist ../../public/sandbox/cube-puzzle-generator",
+    "dev:sandbox": "npm run build:sandbox && vite",
     "lint": "eslint .",
     "preview": "vite preview"
   },

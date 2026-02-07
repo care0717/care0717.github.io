@@ -50,7 +50,7 @@ export async function getAllPosts(): Promise<PostMeta[]> {
  */
 export async function getPostBySlug(slug: string): Promise<PostMeta | null> {
   try {
-    const content = await import(`/src/posts/${slug}.md?raw`);
+    const content = await import(`../posts/${slug}.md?raw`);
     const frontmatter = extractFrontmatter(content.default);
 
     // ファイル名から日付を抽出

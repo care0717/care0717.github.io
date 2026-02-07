@@ -1,9 +1,11 @@
-import { useParams, Link } from 'react-router';
+import { useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import { getPostBySlug, type PostMeta } from '../lib/posts';
 import { parseMarkdown } from '../lib/markdown';
 import { NodesRenderer } from '../components/markdown/NodesRenderer';
+import { Layout } from '../components/Layout';
 import type { Root } from 'mdast';
+import './Post.css';
 
 export default function Post() {
   const { slug } = useParams();
@@ -26,35 +28,34 @@ export default function Post() {
 
   if (loading) {
     return (
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-        <p>読み込み中...</p>
-      </div>
+      <Layout>
+        <p className="loading">読み込み中...</p>
+      </Layout>
     );
   }
 
   if (!post || !mdast) {
     return (
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-        <Link to="/blog">← Blog</Link>
-        <p>記事が見つかりませんでした</p>
-      </div>
+      <Layout>
+        <div className="not-found">
+          <p>記事が見つかりませんでした</p>
+        </div>
+      </Layout>
     );
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-      <Link to="/blog">← Blog</Link>
-
-      <article style={{ marginTop: '2rem' }}>
-        <header>
-          <h1>{post.title}</h1>
-          <time>{post.date}</time>
+    <Layout>
+      <article className="post">
+        <header className="post-header">
+          <h1 className="post-title">{post.title}</h1>
+          <time className="post-meta-date">{post.date}</time>
         </header>
 
-        <div style={{ marginTop: '2rem' }}>
+        <div className="post-content">
           <NodesRenderer nodes={mdast.children} />
         </div>
       </article>
-    </div>
+    </Layout>
   );
 }

@@ -1,19 +1,29 @@
-import { Link } from 'react-router';
+import { Layout } from '../components/Layout';
+import './Sandbox.css';
 
 export default function Sandbox() {
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-      <h1>Sandbox</h1>
-      <Link to="/">← Home</Link>
+    <Layout>
+      <div className="sandbox">
+        <header className="page-header">
+          <h1>Sandbox</h1>
+          <p className="page-description">個人プロジェクトと実験的なツール</p>
+        </header>
 
-      <section style={{ marginTop: '2rem' }}>
-        <h2>プロジェクト</h2>
-        <ul>
-          <li>
-            <a href="/sandbox/cube-puzzle-generator">Cube Puzzle Generator</a>
-          </li>
-        </ul>
-      </section>
-    </div>
+        <section className="projects">
+          <a href="/sandbox/cube-puzzle-generator/index.html" className="project-card">
+            <h3 className="project-title">Cube Puzzle Generator</h3>
+            <p className="project-description">
+              3Dポリキューブブロックを使ったパズル問題を自動生成するツール
+            </p>
+            <div className="project-tags">
+              <span className="tag">React</span>
+              <span className="tag">3D</span>
+              <span className="tag">Puzzle</span>
+            </div>
+          </a>
+        </section>
+      </div>
+    </Layout>
   );
 }
