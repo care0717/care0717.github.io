@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:sandbox && tsc -b && vite build",
-    "build:sandbox": "cd sandbox/cube-puzzle-generator && pnpm install && pnpm build && mkdir -p ../../public/sandbox && cp -r dist ../../public/sandbox/cube-puzzle-generator",
-    "dev:sandbox": "npm run build:sandbox && vite",
+    "build": "tsc -b && vite build",
+    "build:all": "npm run build:sandbox && npm run build",
+    "build:sandbox": "for dir in sandbox/*/; do if [ -f \"${dir}package.json\" ]; then project_name=$(basename \"$dir\"); cd \"$dir\"; pnpm install; pnpm build; cd ../..; if [ -d \"${dir}dist\" ]; then cp -r \"${dir}dist\" \"public/sandbox/$project_name\"; fi; fi; done",
+    "dev:all": "npm run build:sandbox && vite",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/mdast": "4.0.4",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",

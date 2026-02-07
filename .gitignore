@@ -23,4 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-public/sandbox
+!public
+public/sandbox/*
+!public/sandbox/.gitkeep

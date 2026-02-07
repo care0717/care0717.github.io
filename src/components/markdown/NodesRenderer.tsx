@@ -17,11 +17,6 @@ export function NodesRenderer({ nodes }: { nodes: RootContent[] }) {
   return (
     <>
       {nodes.map((node, index) => {
-        // frontmatterやyamlノードはスキップ
-        if (node.type === 'yaml' || node.type === 'toml') {
-          return null;
-        }
-
         switch (node.type) {
           case 'text':
             return <TextNode key={index} node={node} />;
