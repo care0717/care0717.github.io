@@ -20,11 +20,11 @@ export async function parseMarkdown(markdown: string): Promise<Root> {
 /**
  * フロントマターを抽出
  */
-export function extractFrontmatter(markdown: string): Record<string, any> {
+export function extractFrontmatter(markdown: string): Record<string, string> {
   const frontmatterMatch = markdown.match(/^---\n([\s\S]*?)\n---/);
   if (!frontmatterMatch) return {};
 
-  const frontmatter: Record<string, any> = {};
+  const frontmatter: Record<string, string> = {};
   const lines = frontmatterMatch[1].split('\n');
 
   for (const line of lines) {
