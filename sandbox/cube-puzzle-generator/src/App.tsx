@@ -1,11 +1,19 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useSyncExternalStore } from "react";
 import type { Puzzle, PieceKey } from "./types";
 import { PIECE_DEFS, DEFAULT_THETA, DEFAULT_PHI } from "./constants";
 import { encodePuzzle, decodePuzzle, generatePuzzle } from "./utils/encode";
 import { IsometricView } from "./components/IsometricView";
 import { PiecePreview } from "./components/PiecePreview";
 
+function useWindowWidth() {
+  return useSyncExternalStore(
+    (cb) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); },
+    () => window.innerWidth,
+  );
+}
+
 export default function App() {
+  const wide = useWindowWidth() >= 960;
   // Load initial state from URL query parameter
   const initialState = () => {
     const params = new URLSearchParams(window.location.search);
@@ -123,15 +131,9 @@ export default function App() {
     setPhi(p => Math.max(0.05, Math.min(Math.PI / 2 - 0.05, p + dy * 0.008)));
   }, []);
 
-  return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(145deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)", fontFamily: "'Segoe UI','Hiragino Sans','Meiryo',sans-serif", color: "#e2e8f0", display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 16px" }}>
-      <div style={{ textAlign: "center", marginBottom: 28 }}>
-        <div style={{ display: "inline-block", background: "linear-gradient(135deg,#f97316,#ef4444,#8b5cf6,#3b82f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontSize: 34, fontWeight: 900, letterSpacing: "-0.02em" }}>
-          Cube Puzzle Generator
-        </div>
-      </div>
-
-      <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: "20px 24px", marginBottom: 24, border: "1px solid rgba(255,255,255,0.06)", width: "100%", maxWidth: 520 }}>
+  const controlPanel = (
+    <div style={{ width: "100%", maxWidth: wide ? undefined : 520, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: "20px 24px", marginBottom: 24, border: "1px solid rgba(255,255,255,0.06)", width: "100%" }}>
         <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 12, fontWeight: 600 }}>使用ブロックを選択（2つ以上）</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center" }}>
           {(Object.keys(PIECE_DEFS) as PieceKey[]).map(key => {
@@ -163,14 +165,12 @@ export default function App() {
             );
           })}
         </div>
-        {selected.size > 0 && (
-          <div style={{ textAlign: "center", marginTop: 12, fontSize: 12, color: "#64748b" }}>
-            選択中: {[...selected].join(", ")}
-          </div>
-        )}
+        <div style={{ textAlign: "center", marginTop: 12, fontSize: 12, color: "#64748b", visibility: selected.size > 0 ? "visible" : "hidden" }}>
+          選択中: {selected.size > 0 ? [...selected].join(", ") : "\u00A0"}
+        </div>
       </div>
 
-      <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: "16px 24px", marginBottom: 24, border: "1px solid rgba(255,255,255,0.06)", width: "100%", maxWidth: 520 }}>
+      <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: "16px 24px", marginBottom: 24, border: "1px solid rgba(255,255,255,0.06)", width: "100%" }}>
         <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 8, fontWeight: 600 }}>IDから問題を読み込み</div>
         <div style={{ display: "flex", gap: 8 }}>
           <input
@@ -202,113 +202,139 @@ export default function App() {
           fontWeight: 700,
           cursor: selected.size >= 2 ? "pointer" : "not-allowed",
           boxShadow: selected.size >= 2 ? "0 4px 24px rgba(249,115,22,0.3)" : "none",
-          marginBottom: 24,
+          marginBottom: wide ? 0 : 24,
           opacity: generating ? 0.7 : 1
         }}
       >
         {generating ? "生成中..." : "🎲 問題を生成"}
       </button>
 
-      {error && <div style={{ color: "#f87171", fontSize: 14, marginBottom: 16 }}>{error}</div>}
+      {error && <div style={{ color: "#f87171", fontSize: 14, marginTop: 16 }}>{error}</div>}
+    </div>
+  );
 
-      {puzzle && (
-        <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: 24, border: "1px solid rgba(255,255,255,0.06)", width: "100%", maxWidth: 520, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {puzzleId && (
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, width: "100%" }}>
-              <span style={{ fontSize: 12, color: "#64748b", whiteSpace: "nowrap" }}>ID:</span>
-              <code style={{ flex: 1, fontSize: 14, color: "#e2e8f0", background: "rgba(255,255,255,0.06)", padding: "6px 10px", borderRadius: 6, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis" }}>
-                {puzzleId}
-              </code>
-              <button
-                onClick={copyUrl}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: 6,
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  background: copied ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.04)",
-                  color: copied ? "#4ade80" : "#94a3b8",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                  transition: "all 0.2s"
-                }}
-              >
-                {copied ? "✓ コピー済" : "URLコピー"}
-              </button>
-            </div>
-          )}
+  const resultPanel = puzzle && (
+    <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: 16, padding: 24, border: "1px solid rgba(255,255,255,0.06)", width: "100%", maxWidth: wide ? undefined : 520, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {puzzleId && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16, width: "100%" }}>
+          <span style={{ fontSize: 12, color: "#64748b", whiteSpace: "nowrap" }}>ID:</span>
+          <code style={{ flex: 1, fontSize: 14, color: "#e2e8f0", background: "rgba(255,255,255,0.06)", padding: "6px 10px", borderRadius: 6, fontFamily: "monospace", overflow: "hidden", textOverflow: "ellipsis" }}>
+            {puzzleId}
+          </code>
+          <button
+            onClick={copyUrl}
+            style={{
+              padding: "6px 12px",
+              borderRadius: 6,
+              border: "1px solid rgba(255,255,255,0.1)",
+              background: copied ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.04)",
+              color: copied ? "#4ade80" : "#94a3b8",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              transition: "all 0.2s"
+            }}
+          >
+            {copied ? "✓ コピー済" : "URLコピー"}
+          </button>
+        </div>
+      )}
 
-          <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
-            <span style={{ fontSize: 12, color: "#64748b" }}>使用ブロック:</span>
-            {[...selected].map(k => (
-              <div key={k}>
-                <PiecePreview pieceKey={k as PieceKey} size={40} />
-              </div>
-            ))}
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", justifyContent: "center", alignItems: "center" }}>
+        <span style={{ fontSize: 12, color: "#64748b" }}>使用ブロック:</span>
+        {[...selected].map(k => (
+          <div key={k}>
+            <PiecePreview pieceKey={k as PieceKey} size={40} />
           </div>
+        ))}
+      </div>
 
-          <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 16, boxShadow: "0 2px 16px rgba(0,0,0,0.3)" }}>
-            <IsometricView
-              cubes={puzzle.allCubes}
-              width={380}
-              height={340}
-              showAnswer={showAnswer}
-              pieces={puzzle.pieces}
-              theta={theta}
-              phi={phi}
-              onDrag={handleDrag}
-            />
+      <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 16, boxShadow: "0 2px 16px rgba(0,0,0,0.3)" }}>
+        <IsometricView
+          cubes={puzzle.allCubes}
+          width={380}
+          height={340}
+          showAnswer={showAnswer}
+          pieces={puzzle.pieces}
+          theta={theta}
+          phi={phi}
+          onDrag={handleDrag}
+        />
+      </div>
+
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+        <button
+          onClick={() => setShowAnswer(!showAnswer)}
+          style={{
+            padding: "10px 24px",
+            borderRadius: 8,
+            border: "1px solid rgba(255,255,255,0.1)",
+            background: showAnswer ? "rgba(139,92,246,0.15)" : "rgba(255,255,255,0.04)",
+            color: showAnswer ? "#a78bfa" : "#94a3b8",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+        >
+          {showAnswer ? "🔒 答えを隠す" : "👁 答えを見る"}
+        </button>
+        <button
+          onClick={() => { setTheta(DEFAULT_THETA); setPhi(DEFAULT_PHI); }}
+          style={{
+            padding: "10px 16px",
+            borderRadius: 8,
+            border: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(255,255,255,0.04)",
+            color: "#94a3b8",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+        >
+          ↩ 視点リセット
+        </button>
+        <button
+          onClick={shareToX}
+          style={{
+            padding: "10px 24px",
+            borderRadius: 8,
+            border: "1px solid rgba(255,255,255,0.1)",
+            background: "rgba(59,130,246,0.15)",
+            color: "#60a5fa",
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: "pointer"
+          }}
+        >
+          𝕏 ポスト
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: "linear-gradient(145deg,#0f172a 0%,#1e293b 50%,#0f172a 100%)", fontFamily: "'Segoe UI','Hiragino Sans','Meiryo',sans-serif", color: "#e2e8f0", display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 16px" }}>
+      <div style={{ textAlign: "center", marginBottom: 28 }}>
+        <div style={{ display: "inline-block", background: "linear-gradient(135deg,#f97316,#ef4444,#8b5cf6,#3b82f6)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontSize: 34, fontWeight: 900, letterSpacing: "-0.02em" }}>
+          Cube Puzzle Generator
+        </div>
+      </div>
+
+      {wide ? (
+        <div style={{ display: "flex", gap: 32, width: "100%", maxWidth: 1040, alignItems: "flex-start" }}>
+          <div style={{ flex: "0 0 480px" }}>
+            {controlPanel}
           </div>
-
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
-            <button
-              onClick={() => setShowAnswer(!showAnswer)}
-              style={{
-                padding: "10px 24px",
-                borderRadius: 8,
-                border: "1px solid rgba(255,255,255,0.1)",
-                background: showAnswer ? "rgba(139,92,246,0.15)" : "rgba(255,255,255,0.04)",
-                color: showAnswer ? "#a78bfa" : "#94a3b8",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer"
-              }}
-            >
-              {showAnswer ? "🔒 答えを隠す" : "👁 答えを見る"}
-            </button>
-            <button
-              onClick={() => { setTheta(DEFAULT_THETA); setPhi(DEFAULT_PHI); }}
-              style={{
-                padding: "10px 16px",
-                borderRadius: 8,
-                border: "1px solid rgba(255,255,255,0.1)",
-                background: "rgba(255,255,255,0.04)",
-                color: "#94a3b8",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer"
-              }}
-            >
-              ↩ 視点リセット
-            </button>
-            <button
-              onClick={shareToX}
-              style={{
-                padding: "10px 24px",
-                borderRadius: 8,
-                border: "1px solid rgba(255,255,255,0.1)",
-                background: "rgba(59,130,246,0.15)",
-                color: "#60a5fa",
-                fontSize: 13,
-                fontWeight: 600,
-                cursor: "pointer"
-              }}
-            >
-              𝕏 ポスト
-            </button>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {resultPanel}
           </div>
         </div>
+      ) : (
+        <>
+          {controlPanel}
+          {resultPanel}
+        </>
       )}
     </div>
   );

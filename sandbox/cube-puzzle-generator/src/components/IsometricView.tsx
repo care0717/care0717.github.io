@@ -75,7 +75,7 @@ export function IsometricView({ cubes, width = 380, height = 340, showAnswer, pi
   }
 
   const cam = makeCamera(theta, phi);
-  const S = 28;
+  const S = 40;
 
   const ccx = cubes.reduce((s, c) => s + c[0] + 0.5, 0) / cubes.length;
   const ccy = cubes.reduce((s, c) => s + c[1] + 0.5, 0) / cubes.length;
@@ -119,7 +119,7 @@ export function IsometricView({ cubes, width = 380, height = 340, showAnswer, pi
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      style={{ display: "block", cursor: "grab", userSelect: "none", touchAction: "none" }}
+      style={{ display: "block", cursor: "grab", userSelect: "none", touchAction: "none", maxWidth: "100%", height: "auto" }}
       onMouseDown={handlePointerDown}
       onMouseMove={handlePointerMove}
       onMouseUp={handlePointerUp}
